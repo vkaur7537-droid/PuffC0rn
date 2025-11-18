@@ -1,18 +1,100 @@
-<script>
-  window.watsonAssistantChatOptions = {
-    integrationID: "a9fb5de2-9923-45f0-b1b9-dde28ff05fcd", // Integration ID
-    region: "eu-de", // Region where your assistant is hosted
-    serviceInstanceID: "17c98521-80c0-47dc-a22d-8df316cac5a5", // Service instance ID
-    onLoad: async (instance) => { 
-      await instance.render(); 
-    }
-  };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Chatbot</title>
 
-  setTimeout(function () {
-    const t = document.createElement("script");
-    t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" 
-            + (window.watsonAssistantChatOptions.clientVersion || "latest") 
-            + "/WatsonAssistantChatEntry.js";
-    document.head.appendChild(t);
-  });
-</script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #fafafa;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .messages {
+            height: 450px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .user-msg {
+            text-align: right;
+            color: white;
+            background: #0d6efd;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            display: inline-block;
+            max-width: 80%;
+        }
+        .bot-msg {
+            text-align: left;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            display: inline-block;
+            max-width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container p-3">
+        <h3 class="text-center">🍔 Food Chatbot</h3>
+        <div class="messages" id="messageBox"></div>
+
+        <div class="input-group mt-3">
+            <input type="text" class="form-control" id="userInput" placeholder="Ask about food, recipes, restaurants...">
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        const botResponses = {
+            "recipe": "Here’s a great recipe: Try making creamy garlic pasta!",
+            "restaurant": "You can try nearby restaurants like Food Hub or Spice Street.",
+            "calories": "That food has around 200–400 calories depending on serving size.",
+            "store": "Store it in an airtight container in the fridge.",
+            "order": "Sure! You can order food using your favorite delivery app.",
+            "default": "I can help with recipes, nutrition, restaurants, storage tips, and more!"
+        };
+
+        function sendMessage() {
+            const input = document.getElementById("userInput");
+            const messageBox = document.getElementById("messageBox");
+
+            const userMsg = input.value.trim();
+            if (!userMsg) return;
+
+            messageBox.innerHTML += `<div class='user-msg'>${userMsg}</div><br>`;
+            input.value = "";
+
+            setTimeout(() => {
+                let reply = botResponses.default;
+
+                const text = userMsg.toLowerCase();
+                if (text.includes("recipe")) reply = botResponses.recipe;
+                else if (text.includes("restaurant")) reply = botResponses.restaurant;
+                else if (text.includes("calorie")) reply = botResponses.calories;
+                else if (text.includes("store")) reply = botResponses.store;
+                else if (text.includes("order")) reply = botResponses.order;
+
+                messageBox.innerHTML += `<div class='bot-msg'>${reply}</div><br>`;
+                messageBox.scrollTop = messageBox.scrollHeight;
+            }, 500);
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
